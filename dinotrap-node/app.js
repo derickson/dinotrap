@@ -32,10 +32,18 @@ app.configure('production', function(){
 // ######## Socket.IO
 
 io.sockets.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
-  socket.on('my other event', function (data) {
-    console.log(data);
+	
+  socket.on('login', function (data) {
+    socket.set('name', data.name, function() {
+		socket.join(data.name);
+		socket.to(data.name).emit('login-accepted', {"name":data.name, "id": "123" });
+	});
   });
+
+  socket.on('placeTrap', function(data){
+	console.log(data);
+  });
+
 });
 
 // ######## Launch
