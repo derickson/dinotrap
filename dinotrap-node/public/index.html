@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>DinoTrap</title>
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+		<link href="css/style.css" rel="stylesheet" media="all">
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+		<script src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="js/app.js"></script>
+	</head>
+	<body>
+		<div data-role="page" id="splash">
+			<div data-theme="a" data-role="header">
+				<h3>
+					DinoTrap
+				</h3>
+			</div>
+			<div data-role="content">
+				<div style="width: 288px; height: 100px; position: relative; background-color: #fbfbfb; border: 1px solid #b8b8b8;">
+					<img src="http://codiqa.com/static/images/v2/image.png" alt="image" style="position: absolute; top: 50%; left: 50%; margin-left: -16px; margin-top: -18px" />
+				</div>
+				<h2>
+				</h2>
+				<div>
+					<p>
+						<strong>
+							A mobile game based in Washington D.C.
+						</strong>
+					</p>
+					<p>
+						<b>
+							Place traps to capture wanding dinosaurs and earn points.
+						</b>
+					</p>
+				</div>
+				<a data-role="button" data-transition="fade" data-theme="b" href="#login">
+					Login to Play
+				</a>
+			</div>
+		</div>
+		<div data-role="page" id="login">
+			<div data-theme="a" data-role="header">
+				<h3>
+					DinoTrap
+				</h3>
+			</div>
+			<div data-role="content">
+				<h2>
+				</h2>
+				<h2>
+					Login
+				</h2>
+				<div>
+					<p>
+						<strong>
+							The site is under construction ... so for now just tell me what your user name is
+						</strong>
+					</p>
+				</div>
+				<div data-role="fieldcontain">
+					<fieldset data-role="controlgroup">
+						<label for="textinput1">
+							username
+						</label>
+						<input id="textinput1" placeholder="" value="" type="text" />
+					</fieldset>
+				</div>
+				<a data-role="button" data-transition="fade" data-theme="b" href="#game">
+					Submit
+				</a>
+			</div>
+		</div>
+		<div data-role="page" id="game">
+			<div data-theme="a" data-role="header">
+				<h3>
+					DinoTrap
+				</h3>
+				<a data-role="button" data-transition="fade" href="#splash" data-icon="gear" data-iconpos="left">
+					Logout
+				</a>
+			</div>
+			<div data-role="content">
+				<div>
+					<p>
+						<strong>
+							You currently have: 0 points
+						</strong>
+					</p>
+				</div>
+				<h2>
+				</h2>
+				<img src="https://maps.googleapis.com/maps/api/staticmap?center=Madison, WI&amp;zoom=14&amp;size=288x280&amp;markers=Madison, WI&amp;sensor=false" width="288" height="280" />
+				<a data-role="button" data-transition="fade" data-theme="b" href="#game">
+					Place Trap
+				</a>
+			</div>
+		</div>
+		<script>
+			//App custom javascript
+		</script>
+	</body>
+</html>
