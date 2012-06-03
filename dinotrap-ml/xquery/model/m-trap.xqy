@@ -7,6 +7,7 @@ import module namespace alert = "http://marklogic.com/xdmp/alert"
 
 import module namespace cfg = "http://framework/lib/config" at "/lib/config.xqy";
 import module namespace lu = "http://framework/lib/util" at "/lib/l-util.xqy";
+import module namespace json = "http://marklogic.com/json" at "/lib/mljson/json.xqy";
 
 declare namespace fg = "http://framework/geo";
 
@@ -86,4 +87,23 @@ declare function mt:purge() as empty-sequence() {
 	for $i in fn:collection($OBJECT_TYPE)/mt:trap
 	return
 		mt:delete($i)
+};
+
+declare function mt:output-format($item as element(mt:trap)) as item()* {
+	if(xdmp:get-request-field("format") eq "json") then (
+		xdmp:set-response-content-type("application/json"),
+		mt:to-json($item)	
+	) else
+		$item
+};
+
+declare function mt:to-json($item as element(mt:trap)) as item()* {
+	json:serialize(
+		json:object((
+			"guid", $item/mt:guid/fn:string(),
+			"survivorGuid", $item/mt:survivor-guid/fn:string(),
+			"location", $item/fg:location/fn:string(),
+			"distance", xs:double($item/fg:distance)
+		))
+	)
 };

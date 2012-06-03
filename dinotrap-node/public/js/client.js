@@ -52,6 +52,7 @@ app.initSocket = function(name) {
 	app.socket.on("login-accepted", function(data) {
 		app.myname = data.name;
 		app.myid = data.id;
+		app.mypoints = data.points;
 		
 		app.myLocation( app.initMobileMap );
 		
@@ -76,7 +77,6 @@ app.placeTrap = function() {
 			})
 		});
 		
-		app.socket.emit("placeTrap")
 	} else {
 		console.log("socket was null, not placing trap");
 	}
@@ -147,7 +147,6 @@ app.logout = function() {
 $(document).ready(function() {
 	// Step 1
 	$('form#loginForm').submit(function(e){
-		console.log("got here");
 		e.preventDefault();
 		app.login();
 		return false;
@@ -155,7 +154,7 @@ $(document).ready(function() {
 	
 	
 	if(app.myid == null) {
-		$.mobile.changePage($("#splash"));
+	//	$.mobile.changePage($("#splash"));
 	}
 });
 

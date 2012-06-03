@@ -21,7 +21,7 @@ declare function local:new() {
 			let $survivor := ms:gen-survivor($name)
 			return (
 				ms:store($survivor),
-				$survivor
+				ms:output-format($survivor)
 			)
 		else
 			fn:error(xs:QName("ER-BAD-INPUT"),"driver spawn-survivor I need a name")
@@ -39,7 +39,7 @@ declare function local:trap() {
 			let $trap := mt:gen-survivor-trap($survivor/ms:guid/fn:string(), $point, 0.0284090909)
 			return(
 				mt:store($trap),
-				$trap
+				mt:output-format($trap)
 			)	
 			
 		else

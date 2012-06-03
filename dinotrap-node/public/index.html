@@ -11,7 +11,7 @@
 	    <script type="text/javascript" src="/js/jquery.ui.map.full.min.js"></script>
 	    <script type="text/javascript" src="/js/jquery.ui.map.extensions.js"></script>
 		<script src="/socket.io/socket.io.js"></script>
-		<script src="js/app.js"></script>
+		<script src="js/client.js"></script>
 		
 		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
 		<link href="css/style.css" rel="stylesheet" media="all">
@@ -22,6 +22,9 @@
 				<h3>
 					DinoTrap
 				</h3>
+				<a data-transition="fade" href="#about" data-icon="info" data-iconpos="right" class="ui-btn-right">
+					About
+				</a>
 			</div>
 			<div data-role="content">
 				<div style="width: 288px; height: 100px; position: relative; background-color: #fbfbfb; border: 1px solid #b8b8b8;">
@@ -83,23 +86,24 @@
 		</div>
 		<div data-role="page" id="game">
 			<div data-theme="a" data-role="header">
+				<a data-transition="fade" href="javascript:app.logout()" data-icon="gear" data-iconpos="left">
+					Logout
+				</a>
 				<h3>
 					DinoTrap
 				</h3>
-				<a data-role="button" data-transition="fade" href="javascript:app.logout()" data-icon="gear" data-iconpos="left">
-					Logout
+				<a data-transition="fade" href="#about" data-icon="info" data-iconpos="right" class="ui-btn-right">
+					About
 				</a>
 			</div>
 			<div data-role="content">
-				<div ng-controller="app.GameCtrl">
+				<div>
 					<p>
 						<strong>
 							Welcome <span id="nameSpan"></span>, you currently have: <span id="pointsSpan"></span> points
 						</strong>
 					</p>
 				</div>
-				<h2>
-				</h2>
 				<div id="map_canvas"></div>
 				<!-- img src="https://maps.googleapis.com/maps/api/staticmap?center=Madison, WI&amp;zoom=14&amp;size=288x280&amp;markers=Madison, WI&amp;sensor=false" width="288" height="280" /-->
 				<a data-role="button" data-theme="b" href="javascript:app.placeTrap()">
@@ -107,8 +111,41 @@
 				</a>
 			</div>
 		</div>
-		<script>
-			//App custom javascript
-		</script>
+		<div data-role="page" id="about">
+			<div data-theme="a" data-role="header">
+				<a data-transition="fade" data-rel="back" data-icon="arrow-l" data-iconpos="left">
+					Back
+				</a>
+				<h3>
+					DinoTrap
+				</h3>
+			</div>
+			<div data-role="content">
+				<div>
+					<p><strong>
+						DinoTrap is a weekend project.  Here's what the tech stack looks like from 
+						<a href="http://front2backdev.com">front to back</a>:
+					</strong></p>
+					<p>
+					
+					<p>	
+						<a href="http://jquerymobile.com/" alt="jquery mobile"><img src="images/jquerymobile.png"/></a>
+						The website is a JQuery mobile app running google maps on a phone's web browser.  
+						It uses <a href="http://socket.io/">Socket.IO</a> to connect to WebSockets running on ...
+					</p>
+					<p>
+						<a href="http://nodejitsu.com/" alt="nodejitsu"><img src="images/nodejitsu.png"/></a>
+						a nodejitu hosted <a href="http://nodejs.org/">Node.js</a> instance which handles
+						real time messaging and some application logic between the client and a ...
+					</p>
+					<p>
+						<a href="http://community.marklogic.com" alt="MarkLogic"><img src="images/marklogic.png"/></a>
+						MarkLogic Server instance running on cloud hosting.  MarkLogic handles JSON and XML persistence
+						as well as real time geospatial alerting.
+					</p>
+					
+				</div>
+			</div>
+		</div>
 	</body>
 </html>

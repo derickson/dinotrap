@@ -4,6 +4,7 @@ module namespace ms = "http://dinotrap.com/model/survivor";
 
 import module namespace cfg = "http://framework/lib/config" at "/lib/config.xqy";
 import module namespace lu = "http://framework/lib/util" at "/lib/l-util.xqy";
+import module namespace json = "http://marklogic.com/json" at "/lib/mljson/json.xqy";
 
 import module namespace mt = "http://dinotrap.com/model/trap" at "/model/m-trap.xqy";
 
@@ -15,18 +16,21 @@ declare variable $STORAGE_PREFIX as xs:string := fn:concat("/storage/",$OBJECT_T
 declare variable $LOG-LEVEL as xs:string := "debug";
 
 declare function ms:gen-survivor($name) as element(ms:survivor) {
-	let $guid := lu:guid($OBJECT_TYPE)
-	let $proc-name :=
-		if(fn:matches($name, "^[\w\s\d]+$")) then
-			fn:subsequence($name,1,20)
-		else
-			fn:error(xs:QName("ER-INVALID-NAME"),"ms:gen-survivor the name was invalid")
-	return
-		element ms:survivor{
-			element ms:guid { $guid },
-			element ms:name { $proc-name },
-			element ms:points { 0 }
-		}
+	if(ms:name-taken($name)) then
+		ms:get-by-name($name)
+	else
+		let $guid := lu:guid($OBJECT_TYPE)
+		let $proc-name :=
+			if(fn:matches($name, "^[\w\s\d]+$")) then
+				fn:subsequence($name,1,20)
+			else
+				fn:error(xs:QName("ER-INVALID-NAME"),"ms:gen-survivor the name was invalid")
+		return
+			element ms:survivor{
+				element ms:guid { $guid },
+				element ms:name { $proc-name },
+				element ms:points { 0 }
+			}
 };
 
 declare function ms:get-by-id($id as xs:string) as element(ms:survivor)? {
@@ -53,13 +57,12 @@ declare function ms:award-points($item as element(ms:survivor), $points as xs:in
 };
 
 declare function ms:store($item as element(ms:survivor)) as empty-sequence() {
-	let $_ := if(ms:name-taken($item/ms:name/fn:string())) then 
-			fn:error(xs:QName("ER-NAME-TAKEN"),"ms:store then requested name was already taken")
-		else
-			()
-	let $uri := fn:concat($STORAGE_PREFIX, $item/ms:guid/fn:string(), ".xml")
-	return
-		xdmp:document-insert($uri, $item, (), ($OBJECT_TYPE))
+	if(ms:name-taken($item/ms:name/fn:string())) then 
+		()
+	else
+		let $uri := fn:concat($STORAGE_PREFIX, $item/ms:guid/fn:string(), ".xml")
+		return
+			xdmp:document-insert($uri, $item, (), ($OBJECT_TYPE))
 };
 
 declare function ms:status() as element()* {
@@ -89,4 +92,22 @@ declare function ms:purge() as empty-sequence() {
 		xdmp:document-delete(xdmp:node-uri($i))
 	)
 		
+};
+
+declare function ms:output-format($item as element(ms:survivor)) as item()* {
+	if(xdmp:get-request-field("format") eq "json") then (
+		xdmp:set-response-content-type("application/json"),
+		ms:to-json($item)	
+	) else
+		$item
+};
+
+declare function ms:to-json($item as element(ms:survivor)) as item()* {
+	json:serialize(
+		json:object((
+			"guid", $item/ms:guid/fn:string(),
+			"name", $item/ms:name/fn:string(),
+			"points", xs:int($item/ms:points)
+		))
+	)
 };
