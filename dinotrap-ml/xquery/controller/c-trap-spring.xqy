@@ -4,6 +4,7 @@ module namespace cts = "http://dinotrap.com/controller/trap-spring";
 
 import module namespace cfg = "http://framework/lib/config" at "/lib/config.xqy";
 import module namespace lu = "http://framework/lib/util" at "/lib/l-util.xqy";
+import module namespace json = "http://marklogic.com/json" at "/lib/mljson/json.xqy";
 
 import module namespace md = "http://dinotrap.com/model/dino" at "/model/m-dino.xqy";
 import module namespace mt = "http://dinotrap.com/model/trap" at "/model/m-trap.xqy";
@@ -29,7 +30,29 @@ declare function cts:spring-trap(
 	return (
 		
 		mt:delete($trap),
-		ms:award-points($surv, 10)
+		ms:award-points($surv, 10),
+		
+		let $_ := xdmp:http-post(
+			fn:concat($cfg:NODE_JS_LOCATION,"/receiveAlert"),
+			<options xmlns="xdmp:http">
+				<headers>
+					<Content-type>application/json</Content-type>
+				</headers>
+		     </options>,
+			text{
+				json:serialize(
+					json:object((
+						"survivorId", $surv/ms:guid/fn:string(),
+						"trapId", $trap/mt:guid/fn:string(),
+						"dinoId", $dino/md:guid/fn:string(),
+						"points", xs:int($surv/ms:points) + 10
+					))
+				)
+			}
+		)
+		return
+			()
+		
 	)
 		
 

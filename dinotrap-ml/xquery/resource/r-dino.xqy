@@ -19,6 +19,15 @@ declare function local:get-by-id() as element(md:dino) {
 			fn:error(xs:QName("ER-NO-SUCH-OBJ"),"Database did not contain a Dino with that Id")
 };
 
+declare function local:get-by-wmata-id() as element(md:dino) {
+	let $dino := md:get-by-wmata-id(h:id())
+	return
+		if($dino) then
+			$dino
+		else
+			fn:error(xs:QName("ER-NO-SUCH-OBJ"),"Database did not contain a Dino with that Id")
+};
+
 declare function local:list() as element(list) {
 	let $page-size := 10
 	let $est := xdmp:estimate( /md:dino )

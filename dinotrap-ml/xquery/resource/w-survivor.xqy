@@ -35,8 +35,8 @@ declare function local:trap() {
 		if($lat and $lon and $survivor) then
 			
 			let $point := cts:point($lat, $lon)
-			(: 0.0284090909 mile = 50 yards :)
-			let $trap := mt:gen-survivor-trap($survivor/ms:guid/fn:string(), $point, 0.0284090909)
+			(: 0.0568181818 mile = 100 yards :)
+			let $trap := mt:gen-survivor-trap($survivor/ms:guid/fn:string(), $point, 0.0568181818)
 			return(
 				mt:store($trap),
 				mt:output-format($trap)

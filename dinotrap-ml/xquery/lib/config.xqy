@@ -6,10 +6,13 @@ xquery version "1.0-ml" ;
 
 module  namespace cfg = "http://framework/lib/config";
 
+declare variable $NODE_JS_LOCATION := "http://localhost:9060";
 declare variable $PRODUCTION_SETTINGS := fn:false();
 declare variable $TEST_ENABLED := fn:not($PRODUCTION_SETTINGS);
 declare variable $CORONA_ENABLED := fn:false();
 declare variable $CENTRALIZED_LOG_ENABLED := fn:true();
+declare variable $POLL_WMATA := fn:true();
+declare variable $NEAR_ME_DIST := 2.0;
 
 (:  The rewrite library route configuration 
     For documentation see: https://github.com/dscape/rewrite 
@@ -57,6 +60,7 @@ declare variable $ROUTES :=
 		<get path="dino/page/:page"><to>r-dino#list</to></get>
 		<get path="dino/purge"><to>w-dino#purge</to></get>
 		<get path="dino/:id"><to>r-dino#get-by-id</to></get>
+		<get path="dino/wmata/:id"><to>r-dino#get-by-wmata-id</to></get>
 		<delete path="dino/:id"><to>w-dino#delete-by-id</to></delete>
 		<put path="dino/:lat,:lon"><to>w-dino#new</to></put>
 		<put path="dino/:id/:lat,:lon">
@@ -85,6 +89,16 @@ declare variable $ROUTES :=
 			</constraints>
 			<to>w-survivor#trap</to>
 		</put>
+		<get path="survivor/:id/nearMe/:lat,:lon">
+			<constraints>
+				<lat type="double"/>
+				<lon type="double"/>
+			</constraints>
+			<to>r-survivor#near</to>
+		</get>
+
+		<get path="poll/dc"><to>w-busses#poll</to></get>
+
 
 		{if($CORONA_ENABLED) then <ignore>^/corona</ignore> else () }
         {if($TEST_ENABLED) then <ignore>^/test</ignore> else ()}

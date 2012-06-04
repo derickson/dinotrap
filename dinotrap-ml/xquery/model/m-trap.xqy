@@ -92,18 +92,18 @@ declare function mt:purge() as empty-sequence() {
 declare function mt:output-format($item as element(mt:trap)) as item()* {
 	if(xdmp:get-request-field("format") eq "json") then (
 		xdmp:set-response-content-type("application/json"),
-		mt:to-json($item)	
+		json:serialize( mt:to-json($item) )
 	) else
 		$item
 };
 
 declare function mt:to-json($item as element(mt:trap)) as item()* {
-	json:serialize(
+	
 		json:object((
 			"guid", $item/mt:guid/fn:string(),
 			"survivorGuid", $item/mt:survivor-guid/fn:string(),
 			"location", $item/fg:location/fn:string(),
 			"distance", xs:double($item/fg:distance)
 		))
-	)
+	
 };

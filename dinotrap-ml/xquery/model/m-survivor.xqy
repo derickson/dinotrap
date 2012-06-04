@@ -97,17 +97,17 @@ declare function ms:purge() as empty-sequence() {
 declare function ms:output-format($item as element(ms:survivor)) as item()* {
 	if(xdmp:get-request-field("format") eq "json") then (
 		xdmp:set-response-content-type("application/json"),
-		ms:to-json($item)	
+		json:serialize( ms:to-json($item) )
 	) else
 		$item
 };
 
 declare function ms:to-json($item as element(ms:survivor)) as item()* {
-	json:serialize(
+	
 		json:object((
 			"guid", $item/ms:guid/fn:string(),
 			"name", $item/ms:name/fn:string(),
 			"points", xs:int($item/ms:points)
 		))
-	)
+	
 };

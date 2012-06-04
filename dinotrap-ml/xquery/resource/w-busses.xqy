@@ -8,6 +8,8 @@ import module namespace h = "helper.xqy" at "/lib/rewrite/helper.xqy";
 
 import module namespace lb = "/lib/bus" at "/lib/l-bus.xqy";
 
+import module namespace md = "http://dinotrap.com/model/dino" at "/model/m-dino.xqy";
+
 declare namespace wmata = "http://www.wmata.com";
 
 (: Need this so that transaction is an update query across the xdmp:apply :)
@@ -41,8 +43,25 @@ declare variable $bus-position-static := (
     <TripID>9765_12</TripID>
     <TripStartTime>1753-01-01T11:30:00</TripStartTime>
     <VehicleID>2210</VehicleID>
+  </BusPosition>,
+
+  <BusPosition xmlns="http://www.wmata.com">
+    <DateTime>2011-12-24T13:18:18</DateTime>
+    <Deviation>-20.18</Deviation>
+    <DirectionNum>0</DirectionNum>
+    <DirectionText>WEST</DirectionText>
+    <Lat>38.979587</Lat>
+    <Lon>-77.092959</Lon>
+    <RouteID>32</RouteID>
+    <TripEndTime>1753-01-01T13:03:00</TripEndTime>
+    <TripHeadsign>TOTALLY FAKE</TripHeadsign>
+    <TripID>9765_12</TripID>
+    <TripStartTime>1753-01-01T11:30:00</TripStartTime>
+    <VehicleID>99999999</VehicleID>
   </BusPosition>
   );
+
+
 
 declare function local:clear-busses() {
     xdmp:collection-delete("busposition"),
@@ -50,12 +69,15 @@ declare function local:clear-busses() {
 };
 
 declare function local:poll() {
-
-    (:  let $busses :=  $bus-position-static  :)
-    let $busses :=  lb:get-bus-positions() 
-    let $_ := lb:store-busses($busses)
+	let $busses := 
+		if($cfg:POLL_WMATA) then
+    		lb:get-bus-positions() 
+		else
+			$bus-position-static
+			
+    let $dinos := md:gen-or-move-wmata-dino($busses)
     return (
-        lb:busses-to-json($busses)
+        md:output-format($dinos)
     )
 
 };
