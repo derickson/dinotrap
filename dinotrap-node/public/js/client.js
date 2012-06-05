@@ -104,7 +104,7 @@ app.map = {
 	
 	drawTrap: function( trap ) {
 		var split = trap.location.split(",");
-		var color = trap.survivorGuid === app.myid ? "#0000EE" : "#EE00EE";
+		var color = trap.survivorGuid === app.myid || trap.survivorId === app.myid ? "#0000EE" : "#EE00EE";
 		
 		
 		$('#map_canvas').gmap('addShape', 'Circle', 
@@ -159,6 +159,7 @@ app.myLocation = function(cb){
 				function(position) {
 					var lat = position.coords.latitude;
 					var lon = position.coords.longitude;
+					//alert(positioncoords.accuracy);
 					
 					//console.log(lat + ", " + lon);
 					
@@ -185,6 +186,11 @@ app.myLocation = function(cb){
 				},
 				function(msg) {
 					console.log('Error on myLocation: '+ msg);
+				},
+				{
+					enableHighAccuracy: true,
+					maximumAge: 10000,
+					timeout: 5000
 				}
 			);		
 	} else {

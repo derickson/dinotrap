@@ -35,7 +35,7 @@ app.map = {
 	}
 };
 
-app.mlservicehost = "localhost";
+app.mlservicehost = "localhost"; 
 app.mlserviceport = 9056;
 app.time = null;
 

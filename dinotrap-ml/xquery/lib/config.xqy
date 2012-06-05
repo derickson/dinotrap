@@ -6,13 +6,13 @@ xquery version "1.0-ml" ;
 
 module  namespace cfg = "http://framework/lib/config";
 
-declare variable $NODE_JS_LOCATION := "http://localhost:9060";
+declare variable $NODE_JS_LOCATION := "http://localhost:9060"  ; 
 declare variable $PRODUCTION_SETTINGS := fn:false();
 declare variable $TEST_ENABLED := fn:not($PRODUCTION_SETTINGS);
 declare variable $CORONA_ENABLED := fn:false();
 declare variable $CENTRALIZED_LOG_ENABLED := fn:true();
 declare variable $POLL_WMATA := fn:true();
-declare variable $NEAR_ME_DIST := 2.0;
+declare variable $NEAR_ME_DIST := 2;
 
 (:  The rewrite library route configuration 
     For documentation see: https://github.com/dscape/rewrite 
@@ -21,40 +21,11 @@ declare variable $ROUTES :=
     <routes>
         
 		<root>page#status</root>
+		
+		<get path="status.kml"><to>page#kml</to></get>
+		
 		<get path="status"><to>page#status</to></get>
 		
-		<!--get path="driver/dino/spawn/:lat,:lon">
-			<constraints>
-				<lat type="double"/>
-				<lon type="double"/>
-			</constraints>
-			<to>driver#spawn-dino</to>
-		</get>
-		
-		<get path="driver/trap/spawn/:lat,:lon,:distance">
-			<constraints>
-				<lat type="double"/>
-				<lon type="double"/>
-				<distance type="double"/>
-			</constraints>
-			<to>driver#spawn-trap</to>
-		</get>
-		
-		<get path="driver/survivor/spawn/:name">
-			<constraints>
-				<name type="string"/>
-			</constraints>
-			<to>driver#spawn-survivor</to>
-		</get>
-		
-		<get path="driver/survivor/:name/placetrap/:lat,:lon">
-			<constraints>
-				<name type="string"/>
-				<lat type="double"/>
-				<lon type="double"/>
-			</constraints>
-			<to>driver#survivor-placetrap</to>
-		</get-->
 		
 		<get path="dino"><to>r-dino#list</to></get>
 		<get path="dino/page/:page"><to>r-dino#list</to></get>

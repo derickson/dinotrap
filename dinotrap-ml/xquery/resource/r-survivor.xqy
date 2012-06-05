@@ -32,8 +32,13 @@ declare function local:near() {
 					$circle , 
 					("coordinate-system=wgs84")
 				)
-			let $dinos := (cts:search( /md:dino , $query ))[1 to 50]
-			let $traps := (cts:search( /mt:trap , $query ))[1 to 50]
+			let $dinos := (cts:search( /md:dino , $query ))[1 to 100]
+			let $traps := (cts:search( /mt:trap , 
+					cts:or-query(( 
+						$query,
+						cts:element-value-query(xs:QName("mt:survivor-guid")  , $survivor/ms:guid/fn:string() )
+					)) 
+				))[1 to 50]
 			return
 				if(xdmp:get-request-field("format") eq "json") then (
 					xdmp:set-response-content-type("application/json"),
