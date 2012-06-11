@@ -51,7 +51,10 @@ declare function local:delete-by-id() {
 };
  
 declare function local:purge() {
-	md:purge()
+	if(lu:confirm-purge()) then
+		md:purge()
+	else
+		<md:confirm-purge>You need to put in a special command to purge.  This will delete data.</md:confirm-purge>
 };
 
 try          { xdmp:apply( h:function() ) }

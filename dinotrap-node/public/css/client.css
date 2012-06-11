@@ -1,0 +1,202 @@
+html {background-color:black;width:100%; overflow:hidden;}
+@media only screen and (max-width:320px){
+	html {background:black url(../images/startup_screen-320x460.png) no-repeat top center fixed; width:100%;}
+}
+
+
+body {margin:0; padding:0;font-family: Helvetica,Arial,sans-serif; width:100%;}
+#map_canvas { min-height: 320px; min-width: 320px; margin: 0px; padding: 0px }
+
+
+div#loginPopup {
+	font-size: 0.8em;
+	padding:10px;
+	color: white;
+	position: absolute;
+	top:10%;
+	left:20%;
+	
+	border: 2px solid white;
+	background-color:black;
+	
+	width: 60%;
+	height: 75%;
+	
+	-moz-border-radius: 1em;
+	-webkit-border-radius: 1em;
+	border-radius: 1em;
+}
+
+div#loginPopup input#submit{
+	font-size: 14px;
+	padding:2px 5px 3px 5px;
+	background-color: white;
+	postion: relative;
+	right: 50px;
+	height: auto;
+	width: auto;
+	
+	
+	-moz-border-radius: 0.5em;
+	-webkit-border-radius: 0.5em;
+	border-radius: 0.5em;
+}
+
+div.ui-header {
+	border: 1px solid #333;
+	background: #111;
+	color: white;
+	font-weight: bold;
+	text-shadow: 0 -1px 1px black;
+	background-image: -webkit-gradient(linear,left top,left bottom,from(#3C3C3C),to(#111));
+	background-image: -webkit-linear-gradient(#3C3C3C,#111);
+	background-image: -moz-linear-gradient(#3C3C3C,#111);
+	background-image: -ms-linear-gradient(#3C3C3C,#111);
+	background-image: -o-linear-gradient(#3C3C3C,#111);
+	background-image: linear-gradient(#3C3C3C,#111);
+	
+	position: absolute;
+	top:0px;
+	left:0px;
+	width:100%;
+	border-left-width: 0;
+	border-right-width: 0;
+	height:50px;
+	
+}
+
+h3.ui-title {
+	color:white;
+	text-shadow: 0 -1px 1px black;
+	
+	-webkit-margin-before: 1em;
+	-webkit-margin-after: 1em;
+	-webkit-margin-start: 0px;
+	-webkit-margin-end: 0px;
+	font-weight: bold;
+	
+	min-height: 1.1em;
+	text-align: left;
+	font-size: 16px;
+	display: block;
+	margin: .4em 0em 0em .6em;
+	padding: 0;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	outline: 0!important;
+}
+
+
+
+.ui-header-stats {
+	color:white;
+	text-shadow: 0 -1px 1px black;-webkit-margin-before: 1em;
+	-webkit-margin-after: 1em;
+	-webkit-margin-start: 0px;
+	-webkit-margin-end: 0px;
+	min-height: 1.1em;
+	text-align: left;
+	font-size: 12px;
+	display: block;
+	margin: .4em 0em 0em .6em;
+	padding: 0;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	outline: 0!important;
+}
+
+.ui-header-button {
+	
+	/**
+
+	font-weight: bold;
+	color: white;
+	text-shadow: 0 1px 1px #111;
+	
+	-webkit-background-clip: padding-box;
+	-moz-background-clip: padding;
+	background-clip: padding-box;
+	
+	padding: 0;
+	text-align: center;
+	
+	-moz-box-shadow: 0 1px 0 rgba(255,255,255,.3);
+	-webkit-box-shadow: 0 1px 0 
+	rgba(255, 255, 255, .3);
+	box-shadow: 0 1px 0 
+	rgba(255, 255, 255, .3);
+	
+	margin: 0;
+	*/
+	
+	position: absolute;
+	display: inline-block;
+	top: 5px;
+	right: 3px;
+	
+	border: 1px solid #111;
+	background: #333;
+	background-image: -webkit-gradient(linear,left top,left bottom,from(#444),to(#2D2D2D));
+	background-image: -webkit-linear-gradient(#444,#2D2D2D);
+	background-image: -moz-linear-gradient(#444,#2D2D2D);
+	background-image: -ms-linear-gradient(#444,#2D2D2D);
+	background-image: -o-linear-gradient(#444,#2D2D2D);
+	background-image: linear-gradient(#444,#2D2D2D);
+	
+	-moz-border-radius: 1em;
+	-webkit-border-radius: 1em;
+	border-radius: 1em;
+	
+	padding: 2px 2px 0px 2px;
+	
+	cursor: pointer;
+	
+	
+}
+
+#loginButton {
+	right: 50px;
+	padding: 8px 10px 10px 10px;
+}
+
+#actionButton span {
+	
+}
+
+.metrics {
+	text-align:right;
+	color: white;
+	font-size: 12px;
+	position: absolute;
+	top:60px;
+	left:0px;
+	width:100%;
+}
+
+#map_canvas .notloggedin {
+  color: red;
+  background-color: white;
+  font-family: "Lucida Grande", "Arial", sans-serif;
+  font-size: 10px;
+  font-weight: bold;
+  text-align: center;
+  width: 80px;
+  border: 2px solid black;
+  white-space: nowrap;
+}
+
+#map_canvas .playerlabel {
+  color: black;
+  background-color: white;
+  font-family: "Lucida Grande", "Arial", sans-serif;
+  font-size: 10px;
+  font-weight: bold;
+  text-align: center;
+  width: 80px;
+  border: 2px solid black;
+  white-space: nowrap;
+}
+
+

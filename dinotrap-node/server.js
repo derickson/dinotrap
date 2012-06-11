@@ -12,14 +12,20 @@ var https = require('https');
 var url = require('url');
 
 // ######## Configuration
+app.mlservicehost = "69.143.171.59"; // 69.143.171.59
+app.mlserviceport = 9056;
+app.time = null;
+
+
+// ######## Map
 
 app.map = {
+	// convert decimal degrees to radians
 	toRad: function(number) {
 		return number * Math.PI / 180.0
 	},
 	
-	
-	
+	// calculate the distance between two latlon pairs
 	calcDistance: function (lat1, lon1, lat2, lon2) {
 		var R = 3956.6; // miles
 		var dLat = app.map.toRad(lat2-lat1);
@@ -35,9 +41,7 @@ app.map = {
 	}
 };
 
-app.mlservicehost = "localhost"; 
-app.mlserviceport = 9056;
-app.time = null;
+// ###### Express web server config
 
 app.configure(function(){
   app.use(express.bodyParser());
@@ -52,7 +56,7 @@ app.configure('production', function(){
   app.use(express.errorHandler());
 });
 
-
+// ###### Express incoming service for MarkLogic Alerts
 
 app.post('/receiveAlert', function(req, res){
   //console.log(req.body);
@@ -62,6 +66,8 @@ app.post('/receiveAlert', function(req, res){
 
 // ######## ML Interaction
 
+
+// submit message to MarkLogic for logging in a user
 app.mlNewUser= function(name, cb) {
 	var getOptions = {
 	      host: app.mlservicehost,
@@ -69,6 +75,8 @@ app.mlNewUser= function(name, cb) {
 	      path: "/survivor/"+name+"?format=json",
 	      method: 'PUT'
 	    };
+	
+	//console.log(getOptions.path);
 	
 	var req = https.request(getOptions, function(res){
         //console.log('STATUS: ' + res.statusCode);
@@ -78,6 +86,7 @@ app.mlNewUser= function(name, cb) {
 
         res.on('data',function(chunk){
 				var jsonChunk = JSON.parse(chunk);
+				//console.log(jsonChunk);
                 cb(jsonChunk.guid, jsonChunk.points);
         });
     });
@@ -89,6 +98,7 @@ app.mlNewUser= function(name, cb) {
     req.end();
 };
 
+// submit messae to MarkLogic for placing a Trap
 app.mlPlaceTrap= function(data, cb) {
 	
 	//console.log(data);
@@ -101,11 +111,7 @@ app.mlPlaceTrap= function(data, cb) {
 	    };
 	
 	var req = https.request(getOptions, function(res){
-        //console.log('STATUS: ' + res.statusCode);
-        //console.log('HEADERS: ' + JSON.stringify(res.headers));
         res.setEncoding('utf-8');
-
-
         res.on('data',function(chunk){
 				var jsonChunk = JSON.parse(chunk);
                 cb(jsonChunk.guid, jsonChunk.survivorGuid, jsonChunk.location, jsonChunk.distance);
@@ -119,6 +125,7 @@ app.mlPlaceTrap= function(data, cb) {
     req.end();
 };
 
+// tell MarkLogic that it is time to ask WMATA for bus positions
 app.mlDCDinos = function() {
 	var getOptions = {
 	      host: app.mlservicehost,
@@ -127,40 +134,20 @@ app.mlDCDinos = function() {
 	      method: 'GET'
 	    };
 	
-	var message = "";
-	
 	var req = https.request(getOptions, function(res){
-        //console.log('STATUS: ' + res.statusCode);
-        //console.log('HEADERS: ' + JSON.stringify(res.headers));
         res.setEncoding('utf-8');
-
-
-		//var data = res.body;
-		//console.log(data);
-
-    //    res.on('data',function(chunk){
-	//		message += chunk;
-			//	console.log("CHUNK: " +chunk);
-			//	var jsonChunk = JSON.parse(chunk);
-            //    console.log(jsonChunk);
-			//	//io.sockets.emit('dinos',jsonChunk);
-    //    });
-
 		res.on('end', function() {
-	//		var dinos = JSON.parse(message);
-	//		io.sockets.emit('dinos', dinos);
 			io.sockets.emit("newDinosAvailable")
 		});
-
     });
 
     req.on('error', function(e) {
       console.log('problem with request: ' + e.message);
     });
-
     req.end();
 };
 
+// a user is requesting information near their location
 app.mlNearMe = function(data, cb) {
 	var path = "/survivor/"+data.id+"/nearMe/"+data.lat+","+data.lon+"?format=json";
 	
@@ -170,15 +157,9 @@ app.mlNearMe = function(data, cb) {
 	      path: path,
 	      method: 'GET'
 	    };
-	var message = "";
-	
-	
-	var req = https.request(getOptions, function(res){
-		
-		console.log("start message "+message);
-		
-        res.setEncoding('utf-8');
 
+	var req = https.request(getOptions, function(res){
+        res.setEncoding('utf-8');
     	res.on('data',function(chunk){
 			var jsonChunk = JSON.parse(chunk);
 			cb(jsonChunk);
@@ -210,6 +191,9 @@ io.sockets.on('connection', function (socket) {
 					"id": id, 
 					"points": points}
 				)
+				
+				socket.broadcast.emit("otherPlayerPosition", {name:data.name, id:id, lat:data.lat, lon:data.lon});
+				
 			});
 		});
 		
@@ -228,13 +212,17 @@ io.sockets.on('connection', function (socket) {
 			});
 		});
 		
+		socket.on('myPosition', function(data) {
+			socket.broadcast.emit('otherPlayerPosition', data);
+		});
+		
    	});
 
 });
 
 // ######## Launch
 
-app.listen(9060, function(){
+app.listen(80, function(){
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
   app.timer = setInterval(app.mlDCDinos, 120000);
 

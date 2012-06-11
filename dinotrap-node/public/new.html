@@ -1,0 +1,63 @@
+<!doctype html>
+<!--[if lt IE 7 ]> <html lang="en" class="ie6"> <![endif]--> <!--[if IE 7 ]>    <html lang="en" class="ie7"> <![endif]--> <!--[if IE 8 ]>    <html lang="en" class="ie8"> <![endif]--> <!--[if IE 9 ]>    <html lang="en" class="ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>DinoTrap</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+	<link rel="icon" type="image/png" href="/images/dinoicon-small.png">
+	<link rel="apple-touch-icon" href="/images/dinoicon.png">
+	<link rel="apple-touch-startup-image" href="/images/startup_screen-320x460.png" />
+	
+  <link rel="stylesheet"  href="css/client.css" />
+
+</head>
+<body>
+		<div id="map_canvas"></div>
+		<script type="text/x-handlebars">
+	
+			<div class="ui-header">
+				<h3 class="ui-title">DinoTrap</h3>
+				<div class="ui-header-stats">
+					Name: {{App.Player.name}}, Points: {{App.Player.points}}, Traps: {{App.Player.traps}}
+					
+				</div>
+				<a class="ui-header-button" id="loginButton" onclick="javascript:App.login();" ontouchstart="javascript:App.login();" style="display:none;"><span>Login to Play</span></a> 
+				<a class="ui-header-button" id="recenterButton" onclick="javascript:App.recenterClick();" ontouchstart="javascript:App.recenterClick();"><image src="/images/reticle-white.png"></a>
+			</div>
+		
+		    <div id="loginPopup" style="display:none;">
+				<h4>Login</h4>
+				<p>This app is under construction so ... just tell me your username.</p>
+				<label for="name">Name: </label><input autocomplete="off" type="text" name="name" id="name"></input> 
+				<input id="submit" type="submit" onclick="javascript:App.loginGo();" ontouchstart="javascript:App.loginGo();" value="Submit"/>
+			</div>
+		
+			<!--
+				; {{App.Geo.status}} {{App.Geo.accuracy}} {{App.Comms.status}} <span id="ping">Ping</span>
+			-->
+		
+		</script>
+
+
+  <!-- The missing protocol means that it will match the current protocol, either http or https. If running locally, we use the local jQuery. -->
+  <script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=true"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.2.min.js"><\/script>')</script>
+  <script src="js/libs/ember-0.9.8.1.min.js"></script>	
+  <script src="js/libs/markerwithlabel.js"></script>
+  <script src="/socket.io/socket.io.js"></script>	
+  <script src="js/App.js"></script>
+  <script src="js/Geo.js"></script>
+  <script src="js/Coms.js"></script>
+  <script src="js/Buttons.js"></script>
+</body>
+
+
+</html>

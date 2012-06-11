@@ -1,6 +1,6 @@
 {
   "name": "dinotrap",
-  "version": "0.0.1-9",
+  "version": "0.0.1-13",
   "private": true,
   "dependencies": {
     "socket.io": "0.9.x",
@@ -8,7 +8,7 @@
   },
   "subdomain": "dinotrap",
   "scripts": {
-    "start": "app.js"
+    "start": "server.js"
   },
   "engines": {
     "node": "0.6.x"

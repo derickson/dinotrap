@@ -6,7 +6,7 @@ xquery version "1.0-ml" ;
 
 module  namespace cfg = "http://framework/lib/config";
 
-declare variable $NODE_JS_LOCATION := "http://localhost:9060"  ; 
+declare variable $NODE_JS_LOCATION := "http://dinotrap.jit.su"  ; (:  "http://dinotrap.jit.su" :)
 declare variable $PRODUCTION_SETTINGS := fn:false();
 declare variable $TEST_ENABLED := fn:not($PRODUCTION_SETTINGS);
 declare variable $CORONA_ENABLED := fn:false();
@@ -22,6 +22,7 @@ declare variable $ROUTES :=
         
 		<root>page#status</root>
 		
+		<get path="earth"><to>page#earth</to></get>
 		<get path="status.kml"><to>page#kml</to></get>
 		
 		<get path="status"><to>page#status</to></get>

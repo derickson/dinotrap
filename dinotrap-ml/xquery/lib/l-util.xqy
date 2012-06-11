@@ -16,6 +16,10 @@ declare function lu:guid($objectType as xs:string) as xs:string {
 };
 
 
+declare function lu:confirm-purge() as xs:boolean {
+	xdmp:get-request-field("really", "no") eq "yes"
+};
+
 declare function lu:get-request-field-double($name as xs:string, $default as xs:double?) as xs:double? {
 	let $str := xdmp:get-request-field($name, ())
 	return

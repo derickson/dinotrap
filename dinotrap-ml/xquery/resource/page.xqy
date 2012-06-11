@@ -22,6 +22,23 @@ declare function local:status() {
 	}
 };
 
+declare function local:earth() {
+	xdmp:set-response-content-type("text/html; charset=UTF-8"),
+	'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">',
+	<html xmlns="http://www.w3.org/1999/xhtml">
+	    <head>
+	        <title>DinoTrap Dashboard</title>
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+			<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+			<script type="text/javascript" src="/js/earth.js"></script>
+            <link type="text/css" rel="stylesheet" href="/css/earth.css"></link>
+	    </head>
+	    <body>
+	    	<div id="map3d" style="height: 100%; width: 100%;"></div>
+	    </body>
+	</html>
+};
+
 declare function local:kml() {
 xdmp:set-response-content-type("application/vnd.google-earth.kml+xml"),	
 <kml xmlns="http://www.opengis.net/kml/2.2">
@@ -31,7 +48,7 @@ xdmp:set-response-content-type("application/vnd.google-earth.kml+xml"),
 		<Style id="dino">
 	      <IconStyle>
 	        <Icon>
-	          <href>http://dinotrap.jit.su/images/trex.png</href>
+	          <href>http://dinotrap.jit.su/images/trex-highcontrast.png</href>
 	        </Icon>
 	      </IconStyle>
 	    </Style>
@@ -54,11 +71,18 @@ xdmp:set-response-content-type("application/vnd.google-earth.kml+xml"),
 		    </Style>
 			
 		
+			<ScreenOverlay id="ID">
+				<Icon>
+					<href>https://localhost:9056/images/DinoTrapOverlay.jpg</href>
+				</Icon>
+				<overlayXY x="0" y="1" xunits="fraction" yunits="fraction"/>
+			  	<screenXY x="0" y="1" xunits="fraction" yunits="fraction"/>
+			    <rotationXY x="0" y="0" xunits="fraction" yunits="fraction"/>
+			    <size x="0" y="0" xunits="fraction" yunits="fraction"/>
+			</ScreenOverlay>
+	
 		
-		
-		
-		
-		{
+		{ 
 			for $dino in /md:dino
 			let $location := $dino//fg:location/fn:string()
 			let $parts := fn:tokenize($location,",")
@@ -92,6 +116,7 @@ xdmp:set-response-content-type("application/vnd.google-earth.kml+xml"),
 				else
 					()
 			)
+			
 		}
 		
 		{
