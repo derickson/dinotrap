@@ -8,6 +8,7 @@ App.Geo = Ember.Object.create({
 });
 
 
+
 App.wid = null;
 App.outsideGameZoneWarning = false;
 App.startGeo = function() {
@@ -42,16 +43,9 @@ App.startGeo = function() {
 						App.wid = null;
 					    
 						App.Geo.set('status','Stopped');
-						App.Geo.set('lat', lat);
-						App.Geo.set('lon', lon);
-						App.Geo.set('accuracy', acc);
-						map ?  App.updatePlayerPosition(lat, lon) : App.startMap(lat, lon);
+						map ?  App.updatePlayerPositionAcc(lat, lon, acc) : App.startMap(lat, lon, acc);
 					}
 					
-					
-
-					
-					App.ping.show();
 					
 				},
 				function(msg) {
@@ -76,6 +70,8 @@ App.startGeo = function() {
 
 App.adjustMapSize = function() {
 	
+	//$('#map_canvas').css('height', 10 ).css('width', 10);
+	
 	var text = "";
 	
 	text += "window.screen.width: " + window.screen.width + "\n";
@@ -89,6 +85,8 @@ App.adjustMapSize = function() {
 	
 	var width =  document.documentElement.clientWidth;
 	var height = Math.min( window.screen.height, document.documentElement.clientHeight);
+	//var width =  document.documentElement.clientWidth;
+	//var height = document.documentElement.clientHeight;
 	
 	$('#map_canvas').css('height', height ).css('width', width);
 	
@@ -97,22 +95,37 @@ App.adjustMapSize = function() {
     var latlng = new google.maps.LatLng(App.Geo.get('lat'),  App.Geo.get('lon'));
 	map && map.setCenter( latlng );
 	
+	
+	//App.resizingFlag = false;
+	
 };
 
-App.startMap = function(lat, lon) {
+
+
+
+
+//App.resizingFlag = true;
+App.startMap = function(lat, lon, acc) {
 	console.log("startMap");
+	
+	App.Geo.set('lat', lat);
+	App.Geo.set('lon', lon);
+	App.Geo.set('accuracy', acc);
 	
 	var supportsOrientationChange = "onorientationchange" in window,
 	    orientationEvent = supportsOrientationChange ? "orientationchange" : "resize";
 
 	window.addEventListener(orientationEvent, function(e) {
-	    App.adjustMapSize();
+		//if (!App.resizingFlag ) {
+		//	App.resizingFlag = true;
+		//	setTimeout(function(){ 
+		//		App.resizingFlag = false; 
+				App.adjustMapSize();
+		//	}, 100);
+			
+		//}
 	}, false);
 	
-	/*window.addEventListener(onresize, function(e) {
-		console.log("onresize");
-	    util.adjustMapSize();
-	}, false);*/
 	
 	App.adjustMapSize();
 	
@@ -199,9 +212,14 @@ App.newPlayerName = function(name) {
 };
 
 App.updatePlayerPosition = function(lat, lon) {
-	console.log("updatePlayerPosition");
+	App.updatePlayerPositionAcc(lat, lon, -1)
+};
+
+App.updatePlayerPositionAcc = function(lat, lon, acc) {
+	//console.log("updatePlayerPosition");
 	App.Geo.set('lat', lat);
 	App.Geo.set('lon', lon);
+	App.Geo.set('accuracy', acc);
     var latlng = new google.maps.LatLng(lat, lon);
 	map && map.panTo( latlng );
 	playerMarker.setPosition(latlng);
@@ -233,4 +251,108 @@ App.otherPlayer = function(data) {
 		}
 	}
 	 
+};
+
+
+App.placeDate = function() {
+	var date = new Date();
+	return Date.UTC(1900 + date.getYear(), date.getMonth(), date.getDate(),date.getHours(),date.getMinutes(),date.getSeconds(),date.getMilliseconds());
+};
+
+App.dirtyList = {};
+App.dinos = {};
+App.clearDirtyList = function() {
+	for(var key in App.dirtyList) { 
+		delete App.dirtyList[key]; 
+	}
+};
+App.markDinosForDelete = function() {
+	App.clearDirtyList();
+	for(var key in App.dinos) {
+		App.dirtyList[key] = {dirty:true};
+	}
+};
+App.removeFromDirtyList = function(key) {
+	App.dirtyList[key] && delete App.dirtyList[key];
+};
+App.deleteMarkedDinos = function() {
+	for(var key in App.dirtyList) {
+		App.dinos[key] && App.dinos[key].marker.setMap(null);
+		App.dinos[key] && delete App.dinos[key];
+		
+	}
+	App.clearDirtyList();
+};
+
+
+
+App.placeDino = function(data) {
+	
+	App.removeFromDirtyList(data.id);
+	
+	if(! App.dinos[data.id]) {
+		//new dino
+		App.dinos[data.id] = data;
+		App.dinos[data.id].placeDate = App.placeDate();
+		App.dinos[data.id].marker = new google.maps.Marker({
+			clickable: false,
+			icon: "/images/trex.png",
+			position: new google.maps.LatLng(data.lat,data.lon),
+			map: map
+		});
+	} else {
+		//existing dino
+		dMarker = App.dinos[data.id].marker;
+		dMarker.placeDate = App.placeDate();
+		dMarker.lat = data.lat;
+		dMarker.lon = data.lon;
+		var latlng = new google.maps.LatLng(data.lat, data.lon);
+		dMarker.setPosition(latlng);
+	}
+};
+
+App.traps = {};
+App.clearCircles = function() {
+	for(var key in App.traps) { 
+		App.traps[key].circle.setMap(null);
+		delete App.traps[key]; 
+	}
+};
+App.drawTrap = function(trap) {
+	var id = trap.survivorGuid ? trap.survivorGuid : trap.survivorId;
+	App.traps[trap.guid] = trap;
+	
+	var split = trap.location.split(",");
+	var color = id === App.Player.get('id')  ? "#0000EE" : "#EE00EE";
+	
+	var circleOptions = {
+	      strokeColor: color,
+	      strokeOpacity: 0.8,
+	      strokeWeight: 2,
+	      fillColor: color,
+	      fillOpacity: 0.35,
+	      map: map,
+	      center: new google.maps.LatLng(split[0], split[1]),
+	      radius: trap.distance * 1609.344 // meters in a mile
+	    };
+	App.traps[trap.guid].circle = new google.maps.Circle(circleOptions);
+};
+
+
+App.handleDinos = function(data) {
+	App.markDinosForDelete();
+	
+	//App.clearEverything();
+	
+	$.each( data.dinos, function(i, m) {
+		App.placeDino(m);
+	});
+	
+	
+	App.clearCircles();
+	$.each( data.traps, function(i, t) {
+		App.drawTrap(t);
+	});
+	
+	App.deleteMarkedDinos();
 };

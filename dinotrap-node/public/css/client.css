@@ -161,6 +161,11 @@ h3.ui-title {
 	padding: 8px 10px 10px 10px;
 }
 
+#trapButton {
+	right: 50px;
+	padding: 8px 10px 10px 10px;
+}
+
 #actionButton span {
 	
 }

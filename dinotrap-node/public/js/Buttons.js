@@ -1,4 +1,16 @@
 
+App.trapFlag = false;
+App.trap = function () {
+	if (!App.trapFlag) {	
+		App.trapFlag = true;
+		setTimeout(function(){ App.trapFlag = false; }, 100);
+		
+		App.placeTrap();
+		
+	}
+};
+
+
 App.loginFlag = false;
 App.login = function () {
 	if (!App.loginFlag) {	
@@ -26,6 +38,7 @@ App.recenterClick = function() {
 	if (!App.recenterFlag && App.wid === null) {
 		App.recenterFlag = true;
 		setTimeout(function(){ App.recenterFlag = false; }, 100);
+		//App.adjustMapSize();
 		App.startGeo();
 	}
 };
@@ -33,9 +46,6 @@ App.recenterClick = function() {
 
 $(document).ready(function() {
 	
-	
-	
-	App.ping.init();
 	App.startSocket();
 	App.startGeo();
 	

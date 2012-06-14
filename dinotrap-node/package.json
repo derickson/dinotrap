@@ -1,6 +1,6 @@
 {
   "name": "dinotrap",
-  "version": "0.0.1-13",
+  "version": "0.0.1-16",
   "private": true,
   "dependencies": {
     "socket.io": "0.9.x",

@@ -12,7 +12,7 @@ var https = require('https');
 var url = require('url');
 
 // ######## Configuration
-app.mlservicehost = "69.143.171.59"; // 69.143.171.59
+app.mlservicehost = "localhost";
 app.mlserviceport = 9056;
 app.time = null;
 
@@ -113,6 +113,7 @@ app.mlPlaceTrap= function(data, cb) {
 	var req = https.request(getOptions, function(res){
         res.setEncoding('utf-8');
         res.on('data',function(chunk){
+				console.log("Chunk: "+chunk);
 				var jsonChunk = JSON.parse(chunk);
                 cb(jsonChunk.guid, jsonChunk.survivorGuid, jsonChunk.location, jsonChunk.distance);
         });
@@ -213,7 +214,12 @@ io.sockets.on('connection', function (socket) {
 		});
 		
 		socket.on('myPosition', function(data) {
+			console.log("myPosition Request");
 			socket.broadcast.emit('otherPlayerPosition', data);
+			app.mlNearMe(data, function(nearData) {
+				console.log("myPosition Request + sendingNearYou");
+				io.sockets.to(data.id).emit("thingsNearYou", nearData);
+			});
 		});
 		
    	});

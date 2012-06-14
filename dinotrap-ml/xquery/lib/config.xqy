@@ -12,7 +12,7 @@ declare variable $TEST_ENABLED := fn:not($PRODUCTION_SETTINGS);
 declare variable $CORONA_ENABLED := fn:false();
 declare variable $CENTRALIZED_LOG_ENABLED := fn:true();
 declare variable $POLL_WMATA := fn:true();
-declare variable $NEAR_ME_DIST := 2;
+declare variable $NEAR_ME_DIST := 1;
 
 (:  The rewrite library route configuration 
     For documentation see: https://github.com/dscape/rewrite 
@@ -77,7 +77,6 @@ declare variable $ROUTES :=
     </routes>;
 
     
- declare variable $SOCKET_IO_HOST := "http://localhost:9060";
 
 (: controlled collections :)
 declare variable $SETS_OFF_TRAPS as xs:string := "sets-off-traps";
